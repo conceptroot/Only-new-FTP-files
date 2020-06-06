@@ -34,7 +34,7 @@ class OnlyNewFTPFilesGetter(object):
                 print(f"can't change FTP dirrectory {self._FTP_FOLDER}")
         data = []
         self._ftp.dir(data.append)
-        ftp_file_name_date = []
+        ftp_file_name_date = {} 
         now = datetime.datetime.now()
 
         for line in data:
@@ -45,11 +45,11 @@ class OnlyNewFTPFilesGetter(object):
             datestr =str(now.year)+' '.join(line.split()[5:8])
             orig_date = datetime.datetime.strptime(datestr, '%Y%b %d %H:%M')
 
-            ftp_file_name_date.append((file_name, orig_date))
+            ftp_file_name_date[file_name] = orig_date
         return ftp_file_name_date
     
     def get_local_file_names_dates(self):
-        local_file_name_date = []
+        local_file_name_date = {} 
         if self._LOCAL_FOLDER:
             try:
                 os.chdir(self._LOCAL_FOLDER)
@@ -58,7 +58,7 @@ class OnlyNewFTPFilesGetter(object):
         for each_file in os.listdir():
             modi_time = os.path.getctime(each_file)
             modif_date = datetime.datetime.fromtimestamp(modi_time)
-            local_file_name_date.append((each_file, modif_date))
+            local_file_name_date[each_file] = modif_date
         return local_file_name_date
 
 get_ftp = OnlyNewFTPFilesGetter()
