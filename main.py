@@ -88,10 +88,16 @@ class OnlyNewFTPFilesGetter(object):
         return download_list
     
     def update_local_files(self):
-        # for each
-        pass
+        update_list = self._get_ftp_download_list()
+        for each in update_list:
+            print(f"trying to download {each}...")
+            try:
+                with open(each, 'wb') as f:
+                    self._ftp.retrbinary('RETR ' + each, f.write)
+            except:
+                print(f"can't download or write {each}")
 
 get_ftp = OnlyNewFTPFilesGetter()
 
 
-print(get_ftp._get_ftp_download_list())
+get_ftp.update_local_files()

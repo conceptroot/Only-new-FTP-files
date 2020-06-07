@@ -11,4 +11,5 @@ p.s. (be aware)
     script gets creation time in local folder. 
 ## TODO
 1. Add logger
-2. 
+2. Add filter to _get_ftp_file_names_dates. To filter out directiories in output
+3. Add last year files logic. Right now FTP don't give information about year of file creation. So it could cause problems, when january comes.
