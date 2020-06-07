@@ -1,6 +1,22 @@
 # Only-new-FTP-files
 This script checks local files and only gets new files from FTP server.
 
+## Usage
+put secret.yaml file to root dir:
+
+    FTP_HOST: 'xxx.xxx.xxx.xxx'
+    FTP_PORT: 22 
+    FTP_USER: 'ftp_user'
+    FTP_PASSWD: 'ftp_pass'
+    FTP_FOLDER: 'ftp_folder'  # or leave blank to use root dir
+    LOCAL_FOLDER: 'local_folder' # or leave blank to use root dir
+
+Create OnlyNewFTPFilesGetter class object.
+And run update_local_files() method
+
+    ftp = OnlyNewFTPFilesGetter()
+    ftp.update_local_files()
+
 ## Folders
 1. LOCAL_FOLDER - local folder. Script gets date of creation of all files in this folder. And then compare it with files, that located on FTP server.
 2. FTP_FOLDER - FTP folder
