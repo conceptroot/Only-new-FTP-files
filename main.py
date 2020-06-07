@@ -14,8 +14,10 @@ class OnlyNewFTPFilesGetter(object):
         self._FTP_FOLDER = sets['FTP_FOLDER']
         self._ftp_connect()
         self._LOCAL_FOLDER = sets['LOCAL_FOLDER']
-        self._ftp_files = self._get_ftp_file_names_dates()
-        self._local_files = self._get_local_file_names_dates()
+        self._cwd_ftp()
+        self._cwd_local() 
+        # self._ftp_files = self._get_ftp_file_names_dates()
+        # self._local_files = self._get_local_file_names_dates()
 
     def _ftp_connect(self):
         self._ftp = FTP()
@@ -28,12 +30,14 @@ class OnlyNewFTPFilesGetter(object):
         except:
             print("can't login to FTP")
 
-    def _get_ftp_file_names_dates(self) -> dict:
+    def _cwd_ftp(self):
         if self._FTP_FOLDER:
             try:
                 self._ftp.cwd(self._FTP_FOLDER)
             except:
                 print(f"can't change FTP dirrectory {self._FTP_FOLDER}")
+
+    def _get_ftp_file_names_dates(self) -> dict:
         data = []
         self._ftp.dir(data.append)
         ftp_file_name_date = {} 
@@ -50,13 +54,15 @@ class OnlyNewFTPFilesGetter(object):
         # print(f"ls of folder[{self._FTP_FOLDER}]:\n{ftp_file_name_date}")
         return ftp_file_name_date
     
-    def _get_local_file_names_dates(self) -> dict:
-        local_file_name_date = {} 
+    def _cwd_local(self):
         if self._LOCAL_FOLDER:
             try:
                 os.chdir(self._LOCAL_FOLDER)
             except:
                 print(f"can't change local directory {self._LOCAL_FOLDER}")
+
+    def _get_local_file_names_dates(self) -> dict:
+        local_file_name_date = {} 
         for each_file in os.listdir():
             modi_time = os.path.getctime(each_file)
             modif_date = datetime.datetime.fromtimestamp(modi_time)
@@ -65,13 +71,15 @@ class OnlyNewFTPFilesGetter(object):
 
     def _get_ftp_download_list(self):
         download_list=[]
-        for each_ftp_file in self._ftp_files:
-            if self._local_files.get(each_ftp_file, False):
+        ftp_files = self._get_ftp_file_names_dates()
+        local_files = self._get_local_file_names_dates()
+        for each_ftp_file in ftp_files:
+            if local_files.get(each_ftp_file, False):
                 # print(self._local_files.get(each_ftp_file, False))
                 # print(f"date ftp {self._ftp_files[each_ftp_file]}")
                 # print(f"date local {self._local_files[each_ftp_file]}")
                 # print(self._ftp_files[each_ftp_file]- self._local_files[each_ftp_file])
-                if self._ftp_files.get(each_ftp_file) > self._local_files.get(each_ftp_file):
+                if ftp_files.get(each_ftp_file) > local_files.get(each_ftp_file):
                     print(f"file on FTP {each_ftp_file} is newer than local")
                     download_list.append(each_ftp_file)
             else:
@@ -80,6 +88,7 @@ class OnlyNewFTPFilesGetter(object):
         return download_list
     
     def update_local_files(self):
+        # for each
         pass
 
 get_ftp = OnlyNewFTPFilesGetter()
