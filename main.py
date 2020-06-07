@@ -1,9 +1,7 @@
 from ftplib import FTP
-import time
-import pprint
 import os
-from settings import sets
 import datetime
+from settings import sets
 
 class OnlyNewFTPFilesGetter(object):
     def __init__(self, settings= sets):
@@ -90,14 +88,14 @@ class OnlyNewFTPFilesGetter(object):
     def update_local_files(self):
         update_list = self._get_ftp_download_list()
         for each in update_list:
-            print(f"trying to download {each}...")
+            print(f"trying to download {each}...", end= " ")
             try:
                 with open(each, 'wb') as f:
                     self._ftp.retrbinary('RETR ' + each, f.write)
+                print(f"done")
             except:
                 print(f"can't download or write {each}")
 
-get_ftp = OnlyNewFTPFilesGetter()
-
-
-get_ftp.update_local_files()
+if __name__ == "__main__":
+    get_ftp = OnlyNewFTPFilesGetter()
+    get_ftp.update_local_files()

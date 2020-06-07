@@ -18,9 +18,6 @@ And run update_local_files() method
     ftp.update_local_files()
 
 ## Folders
-1. LOCAL_FOLDER - local folder. Script gets date of creation of all files in this folder. And then compare it with files, that located on FTP server.
-2. FTP_FOLDER - FTP folder
-
 p.s. (be aware)
 
     script gets modification time in FTP folder. 
