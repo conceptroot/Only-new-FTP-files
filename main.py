@@ -2,6 +2,7 @@ from ftplib import FTP
 import os
 import datetime
 from settings import sets
+from time import sleep
 
 class OnlyNewFTPFilesGetter(object):
     def __init__(self, settings= sets):
@@ -62,7 +63,7 @@ class OnlyNewFTPFilesGetter(object):
     def _get_local_file_names_dates(self) -> dict:
         local_file_name_date = {} 
         for each_file in os.listdir():
-            modi_time = os.path.getctime(each_file)
+            modi_time = os.path.getmtime(each_file)
             modif_date = datetime.datetime.fromtimestamp(modi_time)
             local_file_name_date[each_file] = modif_date
         return local_file_name_date
@@ -97,5 +98,12 @@ class OnlyNewFTPFilesGetter(object):
                 print(f"can't download or write {each}")
 
 if __name__ == "__main__":
+    print("Запускаю соединение с фтп")
     get_ftp = OnlyNewFTPFilesGetter()
-    get_ftp.update_local_files()
+    while True:
+        print("Обновляю данные... ", end= '')
+        get_ftp.update_local_files()
+        print("сделано")
+        sleep(60)
+    
+        

@@ -21,7 +21,8 @@ And run update_local_files() method
 p.s. (be aware)
 
     script gets modification time in FTP folder. 
-    script gets creation time in local folder. 
+    # script gets creation time in local folder. 
+    script gets modification time in local folder. 
 ## TODO
 1. Add logger
 2. Add filter to _get_ftp_file_names_dates. To filter out directiories in output
