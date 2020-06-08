@@ -15,6 +15,7 @@ class OnlyNewFTPFilesGetter(object):
         self._LOCAL_FOLDER = sets['LOCAL_FOLDER']
         self._cwd_ftp()
         self._cwd_local() 
+        self._LOCAL_UTC = sets['LOCAL_UTC']
         # self._ftp_files = self._get_ftp_file_names_dates()
         # self._local_files = self._get_local_file_names_dates()
 
@@ -48,9 +49,9 @@ class OnlyNewFTPFilesGetter(object):
                 pass
                 # delete_all_files_on_ftp()
             datestr =str(now.year)+' '.join(line.split()[5:8])
-            orig_date = datetime.datetime.strptime(datestr, '%Y%b %d %H:%M')
+            orig_date = datetime.datetime.strptime(datestr, '%Y%b %d %H:%M')+datetime.timedelta(hours=self._LOCAL_UTC)
             ftp_file_name_date[file_name] = orig_date
-        # print(f"ls of folder[{self._FTP_FOLDER}]:\n{ftp_file_name_date}")
+        print(f"ls of folder[{self._FTP_FOLDER}]:\n{ftp_file_name_date}")
         return ftp_file_name_date
     
     def _cwd_local(self):
@@ -66,6 +67,7 @@ class OnlyNewFTPFilesGetter(object):
             modi_time = os.path.getmtime(each_file)
             modif_date = datetime.datetime.fromtimestamp(modi_time)
             local_file_name_date[each_file] = modif_date
+        # print(f"ls of folder[{self._LOCAL_FOLDER}]:\n{local_file_name_date}")
         return local_file_name_date
 
     def _get_ftp_download_list(self):
