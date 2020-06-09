@@ -51,7 +51,7 @@ class OnlyNewFTPFilesGetter(object):
             datestr =str(now.year)+' '.join(line.split()[5:8])
             orig_date = datetime.datetime.strptime(datestr, '%Y%b %d %H:%M')+datetime.timedelta(hours=self._LOCAL_UTC)
             ftp_file_name_date[file_name] = orig_date
-        print(f"ls of folder[{self._FTP_FOLDER}]:\n{ftp_file_name_date}")
+        # print(f"ls of folder[{self._FTP_FOLDER}]:\n{ftp_file_name_date}")
         return ftp_file_name_date
     
     def _cwd_local(self):
@@ -103,9 +103,9 @@ if __name__ == "__main__":
     print("Запускаю соединение с фтп")
     get_ftp = OnlyNewFTPFilesGetter()
     while True:
-        print("Обновляю данные... ", end= '')
+        print("Обновляю данные... ")
         get_ftp.update_local_files()
-        print("сделано")
+        print("... обновление данных завершено")
         sleep(60)
     
         
