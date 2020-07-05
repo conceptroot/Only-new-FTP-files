@@ -10,6 +10,7 @@ put secret.yaml file to root dir:
     FTP_PASSWD: 'ftp_pass'
     FTP_FOLDER: 'ftp_folder'  # or leave blank to use root dir
     LOCAL_FOLDER: 'local_folder' # or leave blank to use root dir
+    LOCAL_UTC: 3 # int - hour delta to UTC time
 
 Create OnlyNewFTPFilesGetter class object.
 And run update_local_files() method
