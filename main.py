@@ -72,15 +72,15 @@ class OnlyNewFTPFilesGetter(object):
 
     def _get_ftp_download_list(self):
         download_list=[]
-        ftp_files = self._get_ftp_file_names_dates()
-        local_files = self._get_local_file_names_dates()
-        for each_ftp_file in ftp_files:
-            if local_files.get(each_ftp_file, False):
+        ftp_files_dates = self._get_ftp_file_names_dates()
+        local_files_dates = self._get_local_file_names_dates()
+        for each_ftp_file in ftp_files_dates:
+            if local_files_dates.get(each_ftp_file, False):
                 # print(self._local_files.get(each_ftp_file, False))
                 # print(f"date ftp {self._ftp_files[each_ftp_file]}")
                 # print(f"date local {self._local_files[each_ftp_file]}")
                 # print(self._ftp_files[each_ftp_file]- self._local_files[each_ftp_file])
-                if ftp_files.get(each_ftp_file) > local_files.get(each_ftp_file):
+                if ftp_files_dates.get(each_ftp_file) > local_files_dates.get(each_ftp_file):
                     print(f"file on FTP {each_ftp_file} is newer than local")
                     download_list.append(each_ftp_file)
             else:
@@ -106,6 +106,6 @@ if __name__ == "__main__":
         print("Обновляю данные... ")
         get_ftp.update_local_files()
         print("... обновление данных завершено")
-        sleep(60)
+        sleep(10)
     
         
