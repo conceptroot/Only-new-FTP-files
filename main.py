@@ -11,24 +11,32 @@ class OnlyNewFTPFilesGetter(object):
         self._FTP_USER = sets['FTP_USER']
         self._FTP_PASSWD = sets['FTP_PASSWD']
         self._FTP_FOLDER = sets['FTP_FOLDER']
-        self._ftp_connect()
+        # self._ftp_connect()
         self._LOCAL_FOLDER = sets['LOCAL_FOLDER']
-        self._cwd_ftp()
-        self._cwd_local() 
+        # self._cwd_ftp()
+        # self._cwd_local() 
         self._LOCAL_UTC = sets['LOCAL_UTC']
-        # self._ftp_files = self._get_ftp_file_names_dates()
-        # self._local_files = self._get_local_file_names_dates()
 
     def _ftp_connect(self):
         self._ftp = FTP()
         try:
             self._ftp.connect(self._FTP_HOST, self._FTP_PORT)
+            print("connected to server")
         except:
             print("can't connect to FTP")
         try:
             self._ftp.login(user = self._FTP_USER, passwd= self._FTP_PASSWD)
+            print("loged in to server")
+            return True
         except:
             print("can't login to FTP")
+
+    def _ftp_disconnect(self):
+        try:
+            self._ftp.quit()
+            print("disconnected from server")
+        except:
+            print("can't disconnect from server")
 
     def _cwd_ftp(self):
         if self._FTP_FOLDER:
@@ -38,6 +46,7 @@ class OnlyNewFTPFilesGetter(object):
                 print(f"can't change FTP dirrectory {self._FTP_FOLDER}")
 
     def _get_ftp_file_names_dates(self) -> dict:
+        
         data = []
         self._ftp.dir(data.append)
         ftp_file_name_date = {} 
@@ -89,23 +98,26 @@ class OnlyNewFTPFilesGetter(object):
         return download_list
     
     def update_local_files(self):
-        update_list = self._get_ftp_download_list()
-        for each in update_list:
-            print(f"trying to download {each}...", end= " ")
-            try:
-                with open(each, 'wb') as f:
-                    self._ftp.retrbinary('RETR ' + each, f.write)
-                print(f"done")
-            except:
-                print(f"can't download or write {each}")
+        # print("Обновляю данные... ")
+        if self._ftp_connect():
+            self._cwd_ftp()
+            self._cwd_local() 
+            update_list = self._get_ftp_download_list()
+            for each in update_list:
+                print(f"trying to download {each}...", end= " ")
+                try:
+                    with open(each, 'wb') as f:
+                        self._ftp.retrbinary('RETR ' + each, f.write)
+                    print(f"done")
+                except:
+                    print(f"can't download or write {each}")
+            self._ftp_disconnect()
+        # print("... обновление данных завершено")
 
 if __name__ == "__main__":
-    print("Запускаю соединение с фтп")
     get_ftp = OnlyNewFTPFilesGetter()
     while True:
-        print("Обновляю данные... ")
         get_ftp.update_local_files()
-        print("... обновление данных завершено")
-        sleep(10)
+        sleep(60)
     
         

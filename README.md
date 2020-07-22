@@ -28,4 +28,4 @@ p.s. (be aware)
 1. Add logger
 2. Add filter to _get_ftp_file_names_dates. To filter out directiories in output
 3. Add last year files logic. Right now FTP don't give information about year of file creation. So it could cause problems, when january comes.
-4. Add "TimeoutError: [WinError 10060]" handler, to avoid server termination if no connection 
+4. [resolved] Add "TimeoutError: [WinError 10060]" handler, to avoid server termination if no connection 
