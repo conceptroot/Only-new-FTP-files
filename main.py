@@ -1,7 +1,7 @@
 from ftplib import FTP
 import os
 import datetime
-from settings import sets
+from secret import sets
 from time import sleep
 
 class OnlyNewFTPFilesGetter(object):
