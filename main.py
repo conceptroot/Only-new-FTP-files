@@ -3,9 +3,18 @@ import os
 import datetime
 from secret import sets
 from time import sleep
+import logging.config
+import yaml
+
+with open('logger_config.yaml') as f:
+    config = yaml.safe_load(f)
+    logging.config.dictConfig(config)
+    
+logger = logging.getLogger(__name__)
 
 class OnlyNewFTPFilesGetter(object):
     def __init__(self, settings= sets):
+        logger.debug("Starting function. Class %s", self.__class__.__name__)
         self._FTP_HOST = sets['FTP_HOST']
         self._FTP_PORT = sets['FTP_PORT']
         self._FTP_USER = sets['FTP_USER']
@@ -18,35 +27,38 @@ class OnlyNewFTPFilesGetter(object):
         self._LOCAL_UTC = sets['LOCAL_UTC']
 
     def _ftp_connect(self):
+        logger.debug("Starting function. Class %s", self.__class__.__name__)
         self._ftp = FTP()
         try:
             self._ftp.connect(self._FTP_HOST, self._FTP_PORT)
-            print("connected to server")
+            logger.info(f"connected to server")
         except:
-            print("can't connect to FTP")
+            logger.warning("can't connect to FTP")
         try:
             self._ftp.login(user = self._FTP_USER, passwd= self._FTP_PASSWD)
-            print("loged in to server")
+            logger.info("loged in to server")
             return True
         except:
-            print("can't login to FTP")
+            logger.warning("can't login to FTP")
 
     def _ftp_disconnect(self):
+        logger.debug("Starting function. Class %s", self.__class__.__name__)
         try:
             self._ftp.quit()
-            print("disconnected from server")
+            logger.info("disconnected from server")
         except:
-            print("can't disconnect from server")
+            logger.warning("can't disconnect from server")
 
     def _cwd_ftp(self):
+        logger.debug("Starting function. Class %s", self.__class__.__name__)
         if self._FTP_FOLDER:
             try:
                 self._ftp.cwd(self._FTP_FOLDER)
             except:
-                print(f"can't change FTP dirrectory {self._FTP_FOLDER}")
+                logger.error(f"can't change FTP dirrectory {self._FTP_FOLDER}")
 
     def _get_ftp_file_names_dates(self) -> dict:
-        
+        logger.debug("Starting function. Class %s", self.__class__.__name__)
         data = []
         self._ftp.dir(data.append)
         ftp_file_name_date = {} 
@@ -64,13 +76,15 @@ class OnlyNewFTPFilesGetter(object):
         return ftp_file_name_date
     
     def _cwd_local(self):
+        logger.debug("Starting function. Class %s", self.__class__.__name__)
         if self._LOCAL_FOLDER:
             try:
                 os.chdir(self._LOCAL_FOLDER)
             except:
-                print(f"can't change local directory {self._LOCAL_FOLDER}")
+                logger.error(f"can't change local directory {self._LOCAL_FOLDER}")
 
     def _get_local_file_names_dates(self) -> dict:
+        logger.debug("Starting function. Class %s", self.__class__.__name__)
         local_file_name_date = {} 
         for each_file in os.listdir():
             modi_time = os.path.getmtime(each_file)
@@ -80,6 +94,7 @@ class OnlyNewFTPFilesGetter(object):
         return local_file_name_date
 
     def _get_ftp_download_list(self):
+        logger.debug("Starting function. Class %s", self.__class__.__name__)
         download_list=[]
         ftp_files_dates = self._get_ftp_file_names_dates()
         local_files_dates = self._get_local_file_names_dates()
@@ -98,7 +113,7 @@ class OnlyNewFTPFilesGetter(object):
         return download_list
     
     def update_local_files(self):
-        # print("Обновляю данные... ")
+        logger.debug("Starting function. Class %s", self.__class__.__name__)
         if self._ftp_connect():
             self._cwd_ftp()
             self._cwd_local() 
